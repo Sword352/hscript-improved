@@ -610,6 +610,7 @@ class Interp {
 			case EImport(c, n):
 				if (!importEnabled)
 					return null;
+
 				var splitClassName = [for (e in c.split(".")) e.trim()];
 				var realClassName = splitClassName.join(".");
 				var claVarName = splitClassName[splitClassName.length - 1];
@@ -650,6 +651,24 @@ class Interp {
 						en = Type.resolveEnum(realClassName);
 
 						//trace(realClassName, cl, en, splitClassName);
+					}
+
+					// handle field import
+					if (cl == null && en == null) {
+						var splitName = c.split(".");
+						var fieldName = splitName.pop();
+						var className = splitName.join(".");
+
+						var parentClass = Type.resolveClass(className);
+						if (parentClass != null) {
+							var field = Reflect.field(parentClass, fieldName);
+							if (field != null) {
+								variables.set(n ?? fieldName, field);
+								return null;
+							}
+							error(ECustom('Field "${fieldName}" from class ${className} could not be found.'));
+							return null;
+						}
 					}
 				}
 

@@ -152,8 +152,8 @@ enum Error {
 	EInvalidOp( op : String );
 	EInvalidAccess( f : String );
 	ECustom( msg : String );
-	EInvalidClass( className : String);
-	EAlreadyExistingClass( className : String);
+	EInvalidClass( className : String );
+	EAlreadyExistingClass( className : String );
 }
 
 
