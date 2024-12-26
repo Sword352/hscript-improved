@@ -124,18 +124,18 @@ class Parser {
 			["|", "&", "^"],
 			["==", "!=", ">", "<", ">=", "<="],
 			["..."],
+			["is"],
 			["&&"],
 			["||"],
 			["=","+=","-=","*=","/=","%=","<<=",">>=",">>>=","|=","&=","^=","=>","??" + "="],
 			["->", "??"],
-			["is"]
 		];
 		opPriority = new Map();
 		opRightAssoc = new Map();
 		for( i in 0...priorities.length )
 			for( x in priorities[i] ) {
 				opPriority.set(x, i);
-				if( i == 9 ) opRightAssoc.set(x, true);
+				if( i == 10 ) opRightAssoc.set(x, true);
 			}
 		for( x in ["!", "++", "--", "~"] ) // unary "-" handled in parser directly!
 			opPriority.set(x, x == "++" || x == "--" ? -1 : -2);

@@ -208,11 +208,10 @@ class Interp {
 		assignOp("??" + "=", function(v1, v2) return v1 == null ? v2 : v1);
 	}
 
-	function checkIsType(e1:Expr,e2:Expr): Bool {
+	function checkIsType(e1:Expr,e2:Expr):Bool {
 		var expr1:Dynamic = expr(e1);
 
-		return switch(Tools.expr(e2))
-		{
+		return switch (Tools.expr(e2)) {
 			case EIdent("Class"):
 				Std.isOfType(expr1, Class);
 			case EIdent("Map") | EIdent("IMap"):
