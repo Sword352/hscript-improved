@@ -684,7 +684,7 @@ class Interp {
 								UnsafeReflect.setField(enumThingy, c, en.createByName(c));
 							} catch(e) {
 								try {
-									UnsafeReflect.setField(enumThingy, c, UnsafeReflect.field(en, c));
+									UnsafeReflect.setField(enumThingy, c, Reflect.makeVarArgs((args:Array<Dynamic>) -> en.createByName(c, args)));
 								} catch(ex) {
 									throw e;
 								}
