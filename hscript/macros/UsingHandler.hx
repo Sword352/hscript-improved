@@ -22,6 +22,8 @@ class UsingHandler {
 
 	public static function build():Array<Field> {
 		var fields = Context.getBuildFields();
+		if (Context.defined("display")) return fields;
+		
 		var clRef = Context.getLocalClass();
 		if (clRef == null) return fields;
 		var cl = clRef.get();
