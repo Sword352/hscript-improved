@@ -29,12 +29,11 @@ class CustomClassHandler implements IHScriptCustomConstructor {
 
 	public function hnew(args:Array<Dynamic>):Dynamic {
 		// TODO: clean this up, it sucks, i hate it
-		// TODO: make static vars work correctly
 		var interp = new Interp();
-
 		interp.errorHandler = ogInterp.errorHandler;
 
-		var _class:IHScriptCustomClassBehaviour = Type.createInstance(cl, args);
+		var superArgs:Array<Any> = findSuperArguments(fields);
+		var _class:IHScriptCustomClassBehaviour = Type.createInstance(cl, superArgs ?? args);
 
 		//var __capturedLocals = ogInterp.duplicate(ogInterp.locals);
 		//var capturedLocals:Map<String, DeclaredVar> = [];
@@ -63,8 +62,10 @@ class CustomClassHandler implements IHScriptCustomConstructor {
 				interp.customClasses.set(key, value);
 			}
 		}
+		
 		// todo: clone static vars, but make it so setting it only sets it on the class
 		// todo: clone public vars
+		interp.staticVariables = ogInterp.staticVariables;
 
 		//trace("Before: " + [for(key => value in interp.variables) key]);
 
@@ -150,6 +151,36 @@ class CustomClassHandler implements IHScriptCustomConstructor {
 
 	public function toString():String {
 		return name;
+	}
+
+	// temporary workaround
+	function findSuperArguments(fields:Array<Expr>):Array<Any> {
+		for (field in fields) {
+			switch (field.e) {
+				case EFunction(args, e, name) if (name == "new"):
+					return findSuperArguments([e]);
+				case EBlock(exprs):
+					return findSuperArguments(exprs);
+				case ECall(e, args):
+					if (!e.e.match(EIdent("super"))) continue;
+					return [for (arg in args) getConstant(arg)];
+				default:
+					continue;
+			}
+		}
+
+		return null;
+	}
+
+	function getConstant(field:Expr):Any {
+		return switch (field.e) {
+			case EConst(c): switch (c) {
+				case CInt(v): v;
+				case CFloat(v): v;
+				case CString(v): v;
+			}
+			default: null;
+		}
 	}
 }
 

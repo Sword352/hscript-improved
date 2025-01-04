@@ -42,6 +42,8 @@ class ClassExtendMacro {
 
 	public static function build():Array<Field> {
 		var fields:Array<Field> = Context.getBuildFields();
+		if (Context.defined("display")) return fields;
+		
 		var clRef = Context.getLocalClass();
 		if (clRef == null) return fields;
 
