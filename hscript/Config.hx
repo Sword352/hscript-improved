@@ -1,24 +1,23 @@
 package hscript;
 
 class Config {
-	// Runs support for custom classes in these
+	/**
+	 * List of classes that can be extended in scripts.
+	 * This can also include classes from packages.
+	 */
 	public static final ALLOWED_CUSTOM_CLASSES = [
-		"flixel",
+		"flixel", "funkin", "openfl.display"
 	];
 
-	// Runs support for abstract support in these
+	/**
+	 * List of enum abstracts that can be read by scripts.
+	 * This can also include enum abstracts from packages.
+	 */
 	public static final ALLOWED_ABSTRACT_AND_ENUM = [
-		"flixel",
-		"openfl.display.BlendMode",
+		"flixel", "funkin", "openfl.display.BlendMode"
 	];
 
-	// Incase any of your files fail
-	// These are the module names
-	public static final DISALLOW_CUSTOM_CLASSES = [
-
-	];
-
-	public static final DISALLOW_ABSTRACT_AND_ENUM = [
-
-	];
+	// Exclusion lists in case any modules fails
+	public static final DISALLOW_CUSTOM_CLASSES = [];
+	public static final DISALLOW_ABSTRACT_AND_ENUM = [];
 }
