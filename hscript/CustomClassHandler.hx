@@ -53,7 +53,7 @@ class CustomClassHandler implements IHScriptCustomConstructor {
 		//	}
 		//}
 		for (key => value in ogInterp.variables) {
-			if(!disallowCopy.contains(key)) {
+			if(key != "trace" && !disallowCopy.contains(key)) {
 				interp.variables.set(key, value);
 			}
 		}
