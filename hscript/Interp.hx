@@ -458,9 +458,9 @@ class Interp {
 			} catch (e:Stop) {
 				switch (e) {
 					case SBreak:
-						throw "Invalid break";
+						error(ECustom("Invalid break"));
 					case SContinue:
-						throw "Invalid continue";
+						error(ECustom("Invalid continue"));
 					case SReturn:
 						var v = returnValue;
 						returnValue = null;
