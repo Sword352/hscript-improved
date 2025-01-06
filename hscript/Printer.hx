@@ -366,13 +366,11 @@ class Printer {
 			case EInvalidClass(cla): "Invalid class: " + cla + " was not found.";
 			case EAlreadyExistingClass(cla): 'Custom Class named $cla already exists.';
 		};
-		/*
 		#if hscriptPos
 		return e.origin + ":" + e.line + ": " + message;
 		#else
-		*/
 		return message;
-		// #end
+		#end
 	}
 
 
