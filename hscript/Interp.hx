@@ -101,7 +101,7 @@ class Interp {
 		_hasScriptObject = v != null;
 		return scriptObject = v;
 	}
-	public var errorHandler:Error->Void;
+	public var errorHandler:(Error, PosInfos)->Void;
 	public var importFailedCallback:Array<String>->Bool;
 
 	public var customClasses:Map<String, Dynamic>;
@@ -472,7 +472,7 @@ class Interp {
 			}
 		} catch(e:Error) {
 			if (errorHandler != null)
-				errorHandler(e);
+				errorHandler(e, posInfos());
 			else
 				throw e;
 			return null;
