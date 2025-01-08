@@ -16,7 +16,7 @@ class ClassExtendMacro {
 	static inline final FUNC_PREFIX:String = "_HX_SUPER__";
 	static inline final CLASS_SUFFIX:String = "_HSX";
 
-	static final unallowedMetas:Array<String> = [":bitmap", ":noCustomClass", ":generic"];
+	static final unallowedMetas:Array<String> = [":bitmap", ":noCustomClass", ":generic", ":deprecated"];
 
 	/**
 	 * List of classes which are known not to be invalid.
@@ -64,13 +64,23 @@ class ClassExtendMacro {
 		for (m in metas)
 			if (unallowedMetas.contains(m.name))
 				return fields;
-		
-		var shadowClass = macro class {};
 
+		var shadowClass = macro class {};
 		var definedFields:Array<String> = [];
+		var deprecatedFields:Array<String> = [];
 		var hasConstructor:Bool = false;
 		var hasHgetInSuper:Bool = false;
 		var hasHsetInSuper:Bool = false;
+
+		// get every deprecated fields before processing
+		for (field in fields) {
+			for (meta in field.meta) {
+				if (meta.name == ":deprecated") {
+					deprecatedFields.push(field.name);
+					break;
+				}
+			}
+		}
 
 		for (f in fields.copy()) {
 			if (f.name == "new") {
@@ -92,9 +102,30 @@ class ClassExtendMacro {
 			if (f.access.contains(ADynamic) || f.access.contains(AStatic) || f.access.contains(AExtern) || f.access.contains(AInline) || f.access.contains(AFinal))
 				continue;
 
-			for (m in f.meta)
-				if (unallowedMetas.contains(m.name))
+			var disallowed:Bool = false;
+
+			for (m in f.meta) {
+				if (unallowedMetas.contains(m.name)) {
+					disallowed = true;
+					break;
+				}
+			}
+
+			if (disallowed)
+				continue;
+
+			if (deprecatedFields.length > 0) {
+				for (field in deprecatedFields) {
+					if (f.name == 'get_${field}' || f.name == 'set_${field}') {
+						// don't override getter/setter of deprecated property
+						disallowed = true;
+						break;
+					}
+				}
+	
+				if (disallowed)
 					continue;
+			}
 
 			switch (f.kind) {
 				case FFun(fun):
