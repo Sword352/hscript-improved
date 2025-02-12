@@ -141,12 +141,16 @@ class ClassExtendMacro {
 
 					if (returns) {
 						overrideExpr = macro {
-							var name:String = $v{name};
+							// NOTE: this local variable used to be named "name" instead,
+							// which caused conflicts if the function had an argument with that same name.
+							// I renamed it since "name" is a common naming
+							
+							var _hx_func_name:String = $v{name};
 
 							if (__custom__variables != null) {
-								if (__custom__variables.exists(name)) {
+								if (__custom__variables.exists(_hx_func_name)) {
 									var v:Dynamic = null;
-									if (Reflect.isFunction(v = __custom__variables.get(name))) {
+									if (Reflect.isFunction(v = __custom__variables.get(_hx_func_name))) {
 										return v($a{arguments});
 									}
 								}
@@ -156,12 +160,12 @@ class ClassExtendMacro {
 					}
 					else {
 						overrideExpr = macro {
-							var name:String = $v{name};
+							var _hx_func_name:String = $v{name};
 
 							if (__custom__variables != null) {
-								if (__custom__variables.exists(name)) {
+								if (__custom__variables.exists(_hx_func_name)) {
 									var v:Dynamic = null;
-									if (Reflect.isFunction(v = __custom__variables.get(name))) {
+									if (Reflect.isFunction(v = __custom__variables.get(_hx_func_name))) {
 										v($a{arguments});
 										return;
 									}
